@@ -1,5 +1,5 @@
 local aN = require(game.ReplicatedStorage.Dependencies.NumberSystems.AlyaNum)
-local DBSHelper = require(game.ReplicatedFirst.Dependencies.KitHelper)
+local DBSHelper = require(game.ReplicatedStorage.Dependencies.KitHelper)
 
 --hard to optimize because of how this script is so far from the others.
 

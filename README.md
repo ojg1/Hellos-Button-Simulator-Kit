@@ -1,6 +1,10 @@
 
 # Welcome to H|DBS Kit V1.2
 
+## What I want coming up.
+- Regex/LaTeX style aN formatting for easier, complex intergration of complex functions.
+- Organization for InteractiveAction.luau and simple, clear instructions to build a stat. Many people are still confused about that.
+
 ## Configurations
 
 ### Main Install
@@ -34,7 +38,7 @@ local [STAT]Table = {
 	Attributes = {
 		Reset = {stat0, stat1, stat2},
 		SubFromCTag = false,
-		BillboardFormat = "Cost CostTag = Return RetuTag" --How you want to format the BillboardGUI on the butotn
+		BillboardFormat = "Cost CostTag = Return RetuTag" --How you want to format the BillboardGUI on the button
 	}
 }
 
@@ -54,7 +58,7 @@ The github repository does NOT support certain objects as in the rbxl and rbxm a
 
 If you find any issues while installing or find any issues while playtesting the kit, please leave it in https://www.github.com/ojg1/Hellos-Button-Simulator-Kit/issues. 
 
-## diff:
+## Changelog:
 H|DBS Kit V1.1
 --removed EternityNum because of precision errors
 --rewrote InteractiveActivation (pre: TagHandler.lua) for clarity and debugging

@@ -80,7 +80,7 @@ function Helper:LoadData(Player : Player, DataString : string)
 		local StatChild = KitStats:FindFirstChild(Divide[1])
 			
 		if StatChild then
-			StatChild.Value = aN.toString(Divide[2])
+			StatChild.Value = Divide[2]
 		end
 			
 		-- KitStats:FindFirstChild(Divide[1]).Value = aN.toString(aN.lbdecode(Divide[2]))

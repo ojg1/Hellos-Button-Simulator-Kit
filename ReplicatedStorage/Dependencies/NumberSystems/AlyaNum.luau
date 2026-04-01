@@ -1564,6 +1564,27 @@ function AlyaNum.changeDefaultAbbreviation(mode: "suffix" | "scientific")
 	DEFAULT_ABBREVIATION = mode
 end
 
+
+function AlyaNum.toStringBaseAlya(sBaseAlyaNum) : string
+	sBaseAlyaNum = AlyaNum.toBaseAlya(sBaseAlyaNum)
+	return tostring(sBaseAlyaNum["sign"])..";"..tostring(sBaseAlyaNum["multiplicand"])..";"..tostring(sBaseAlyaNum["exponent"])..";"..tostring(sBaseAlyaNum["tetrate"])..";"..tostring(sBaseAlyaNum["pentate"])..";"..tostring(sBaseAlyaNum["hexate"])..";"..tostring(sBaseAlyaNum["heptate"])
+end
+
+function AlyaNum.fromStringBaseAlya(StringBaseAlyaNum : string) :AlyaNum
+	local strList = string.split(StringBaseAlyaNum, ";")
+
+	return AlyaNum.new({
+		["sign"] = strList[1],
+		["multiplicand"] = strList[2],
+		["exponent"] = strList[3],
+		["tetrate"] = strList[4],
+		["pentate"] = strList[5],
+		["hexate"] = strList[6],
+		["heptate"] = strList[7]
+	})
+
+end
+
 -- exports
 AlyaNum.fix = fix
 AlyaNum.add = function(self: AlyaNum, number: Number)

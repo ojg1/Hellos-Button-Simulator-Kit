@@ -62,8 +62,6 @@ function Helper:LoadDataLBDecode(Player : Player, DataString : string)
 			StatChild.Value = aN.toString(aN.lbencode(tonumber(Divide[2])))
 		end
 			
-		-- KitStats:FindFirstChild(Divide[1]).Value = aN.toString(aN.lbdecode(Divide[2]))
-		--List[Divide[1]] = aN.lbdecode(Divide[2])
 	end
 
 end
@@ -82,9 +80,7 @@ function Helper:LoadData(Player : Player, DataString : string)
 		if StatChild then
 			StatChild.Value = Divide[2]
 		end
-			
-		-- KitStats:FindFirstChild(Divide[1]).Value = aN.toString(aN.lbdecode(Divide[2]))
-		--List[Divide[1]] = aN.lbdecode(Divide[2])
+
 	end
 end
 

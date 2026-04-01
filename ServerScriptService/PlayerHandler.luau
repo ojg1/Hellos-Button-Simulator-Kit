@@ -16,12 +16,10 @@ local DBSData = DataStoreService:GetDataStore("DBSData")
 game:BindToClose(function()
 	if DBSConfig.UseLeaderboardEncryption then
 		for _,Player in pairs(game.Players:GetPlayers()) do
-			-- task.spawn(DBSHelper:SaveDataLBEncode(), Player)
 			DBSHelper:SaveDataLBEncode(Player)
 		end		
 	else
 		for _,Player in pairs(game.Players:GetPlayers()) do
-			-- task.spawn(DBSHelper:SaveData(), Player)
 			DBSHelper:SaveData(Player)
 		end
 	end

@@ -1,6 +1,5 @@
 local CollectionService = game:GetService("CollectionService")
 local RS = game.ReplicatedStorage
-local AlyaNum = require(RS.Dependencies.NumberSystems.AlyaNum)
 local aN = require(RS.Dependencies.NumberSystems.AlyaNum)
 local KH = require(RS.Dependencies.KitHelper)
 
@@ -30,14 +29,10 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 
 		Active.Touched:Connect(function(hit)
 
-
-
 			if hit.Parent:FindFirstChild("Humanoid") then
-
 
 				local Player = game.Players:GetPlayerFromCharacter(hit.Parent)
 				local PlayerStats = Player:WaitForChild("KitStats")
-
 
 				--'p' player
 				local pCTag = aN.fromString(PlayerStats[CostTag].Value)
@@ -49,25 +44,26 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 
 
 					for boost, value in pairs(Boosts) do
-						local KitStatValue = aN.fromString(PlayerStats[boost].Value)
+						local KitStatValue = aN.fromStringBaseAlya(PlayerStats[boost].Value)
 						local init = aN.mul(aN.fromString(value), KitStatValue)
 						init = aN.add(init, aN.fromString("1e0"))
+
 
 						addValue = aN.mul(init, addValue)
 					end
 
 					--add stat
-					PlayerStats[RetuTag].Value = aN.toString(aN.add(addValue, aN.fromString(PlayerStats[RetuTag].Value)))
+					PlayerStats[RetuTag].Value = aN.toStringBaseAlya(aN.add(addValue, aN.fromStringBaseAlya(PlayerStats[RetuTag].Value)))
 
 					if Attributes.SubFromCStat then
-						PlayerStats[CostTag].Value = aN.toString(aN.sub(aN.fromString(PlayerStats[CostTag].Value), aN.fromString(C.Cost.Value)))		
+						PlayerStats[CostTag].Value = aN.toStringBaseAlya(aN.sub(aN.fromStringBaseAlya(PlayerStats[CostTag].Value), aN.fromString(C.Cost.Value)))		
 					end
 
 					
 					print(Attributes.Reset)
 					for _,Stat in pairs(Attributes.Reset) do
-						if Stat == "Multi" then PlayerStats["Multi"].Value = "1e0" continue end
-						PlayerStats[Stat].Value = "0e0"
+						if Stat == "Multi" then PlayerStats["Multi"].Value = aN.toStringBaseAlya(aN.fromString("1e0")) continue end
+						PlayerStats[Stat].Value = aN.toStringBaseAlya(aN.fromString("0e0"))
 					end
 
 				end

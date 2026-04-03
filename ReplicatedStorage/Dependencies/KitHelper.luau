@@ -6,7 +6,7 @@ local DBSData = DSS:GetDataStore("DBSData")
 --Datastore helpers
 
 --save data using aN lb
-function Helper:SaveDataLBEncode(Player : Player)
+function Helper:SaveDataLibrary(Player : Player)
 	local DataString = ""
 	local PlayerKitStats = Player:WaitForChild("KitStats")
 	
@@ -26,8 +26,48 @@ function Helper:SaveDataLBEncode(Player : Player)
 	end
 end
 
+function Helper:SaveDataBaseAlya(Player : Player)
+	local DataString = ""
+	local PlayerKitStats = Player:WaitForChild("KitStats")
+	
+	for _,Stat in pairs(PlayerKitStats:GetChildren()) do
+		DataString = DataString..Stat.Name..":"..Stat.."|"
+	end
+	
+	local Success, ErrorMessage = pcall(function()
+		DBSData:SetAsync(Player.UserId, DataString)
+	end)
+	
+	if Success then
+		return 
+	else
+		print("Failed to save data for userId:"..tostring(Player.UserId).."| userName:"..Player.Name)
+		warn(ErrorMessage)
+	end
+end
+
+--save data using aN lb
+function Helper:LoadDataBaseAlya(Player : Player, DataString : string)
+
+	--redefine KitStats
+	local KitStats = Player:WaitForChild("KitStats")
+	local StatList = string.split(DataString, "|")
+
+	for _, LBValue in pairs(StatList) do
+		local Divide = string.split(LBValue, ":")
+		local StatChild = KitStats:FindFirstChild(Divide[1])
+			
+		if StatChild then
+			StatChild.Value = Divide[2]
+		end
+			
+	end
+
+end
+
+
 --savedata with string as is
-function Helper:SaveData(Player : Player)
+function Helper:SaveDataString(Player : Player)
 	local DataString = ""
 	local PlayerKitStats = Player:WaitForChild("KitStats")
 	
@@ -48,7 +88,7 @@ function Helper:SaveData(Player : Player)
 end
 
 --save data using aN lb
-function Helper:LoadDataLBDecode(Player : Player, DataString : string)
+function Helper:LoadDataLibrary(Player : Player, DataString : string)
 
 	--redefine KitStats
 	local KitStats = Player:WaitForChild("KitStats")
@@ -66,8 +106,8 @@ function Helper:LoadDataLBDecode(Player : Player, DataString : string)
 
 end
 
---savedata with string as is
-function Helper:LoadData(Player : Player, DataString : string)
+--loaddata with string as is
+function Helper:LoadDataString(Player : Player, DataString : string)
 	
 	--redefine KitStats
 	local KitStats = Player:WaitForChild("KitStats")

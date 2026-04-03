@@ -14,16 +14,9 @@ local DBSConfig = require(Dependencies.Configuration) --Dependencies/Configurati
 local DBSData = DataStoreService:GetDataStore("DBSData")
 
 game:BindToClose(function()
-	if DBSConfig.UseLeaderboardEncryption then
-		for _,Player in pairs(game.Players:GetPlayers()) do
-			DBSHelper:SaveDataLBEncode(Player)
-		end		
-	else
-		for _,Player in pairs(game.Players:GetPlayers()) do
-			DBSHelper:SaveData(Player)
-		end
-	end
-
+	for _,Player in pairs(game.Players:GetPlayers()) do
+		DBSHelper["SaveData"..DBSConfig.PlayerFormat](Player)
+	end		
 end)
 
 
@@ -53,12 +46,7 @@ game.Players.PlayerAdded:Connect(function(Player : Player)
 	end)
 
 	if Success and Data then
-		if DBSConfig.UseLeaderboardEncryption then
-			DBSHelper:LoadDataLBDecode(Player, Data)
-		else
-			DBSHelper:LoadData(Player, Data)
-		end
-
+		DBSHelper["LoadData"..DBSConfig.PlayerFormat]()
 	else
 		print("No data found for userId and userName: "..Player.UserId.." "..Player.Name)
 		print(ErrorMessage)
@@ -67,18 +55,14 @@ game.Players.PlayerAdded:Connect(function(Player : Player)
 	--main loop
 	while task.wait(DBSConfig.MainIncrLoopTickRate) do
 		local RSkill = aN.mul(aN.fromString("2e0"), 
-			aN.log10(aN.fromString(KitStats.Money.Value)))
+			aN.log10(aN.fromStringBaseAlya(KitStats.Money.Value)))
 		LSkill.Value = aN.toSuffix(RSkill)
 
-		KitStats.Money.Value = aN.toString(aN.add(aN.fromString(KitStats.Money.Value), aN.fromString(KitStats.Multi.Value)))
+		KitStats.Money.Value = aN.toStringBaseAlya(aN.add(aN.fromStringBaseAlya(KitStats.Money.Value), aN.fromStringBaseAlya(KitStats.Multi.Value)))
 	end
 
 end)
 
 game.Players.PlayerRemoving:Connect(function(Player)
-	if DBSConfig.UseLeaderboardEncryption then
-		DBSHelper:SaveDataLBEncode(Player)
-	else
-		DBSHelper:SaveData(Player)
-	end
+	DBSHelper["SaveData"..DBSConfig.PlayerFormat]()
 end)

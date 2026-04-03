@@ -1,7 +1,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
-h1, h2, p, a, table, tr, th{
+h1, h2, p, a, table, tr, th, button{
     font-family: "Inter", sans-serif;
 }
 
@@ -9,12 +9,36 @@ body{
     background-color: aquamarine;
 }
 
+#container{
+    display: flex;
+}
+
 .bubbleBox{
     border-radius: 20px;
     background-color: white;
     margin-left: 3px;
     margin-right: 3px;
-    margin-top: 3px;
+    margin-top: 10px;
     margin-bottom: 3px;
     padding:10px 10px 10px 10px;
+}
+
+#sidebar{
+    width:10%;
+}
+
+#mainbar{
+    width:90%;
+}
+
+.note{
+    color: red;
+}
+
+.linkButton{
+    width: 100%;
+    height: 50px;
+    font-size: larger;
+    border-radius: 20px;
+    margin-bottom: 5px;
 }

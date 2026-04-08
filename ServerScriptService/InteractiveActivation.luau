@@ -35,9 +35,12 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 				local PlayerStats = Player:WaitForChild("KitStats")
 
 				--'p' player
-				local pCTag = aN.fromString(PlayerStats[CostTag].Value)
-				local pRTag = aN.fromString(PlayerStats[RetuTag].Value)
+				local pCTag = aN.fromStringBaseAlya(PlayerStats[CostTag].Value)
+				local pRTag = aN.fromStringBaseAlya(PlayerStats[RetuTag].Value)
 
+
+				print(pCTag)
+				print(pRTag)
 				if aN.moreEquals(pCTag, aN.fromString(C.Cost.Value)) then
 
 					local addValue = aN.fromString(C.Return.Value)
@@ -59,7 +62,7 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 						PlayerStats[CostTag].Value = aN.toStringBaseAlya(aN.sub(aN.fromStringBaseAlya(PlayerStats[CostTag].Value), aN.fromString(C.Cost.Value)))		
 					end
 
-					
+
 					print(Attributes.Reset)
 					for _,Stat in pairs(Attributes.Reset) do
 						if Stat == "Multi" then PlayerStats["Multi"].Value = aN.toStringBaseAlya(aN.fromString("1e0")) continue end

@@ -1,68 +1,154 @@
+local CollectionService = game:GetService("CollectionService")
+local RS = game.ReplicatedStorage
+local aN = require(RS.Dependencies.NumberSystems.AlyaNum)
+local KH = require(RS.Dependencies.KitHelper)
 
---Services
-local ReplicatedStorage = game.ReplicatedStorage
-local Dependencies = ReplicatedStorage.Dependencies
-local DataStoreService = game:GetService("DataStoreService")
+type baseAttributes = {
+	Reset : {},
+	SubFromCStat: boolean,
+	BillboardFormat: string | "Cost CostTag = Return RetuTag"
+}
 
---dependencies
-local aN = require(Dependencies.NumberSystems.AlyaNum) --Dependencies/NumberSystems/AlyaNum
-local DBSHelper = require(Dependencies.KitHelper) --Dependencies/KitHelper
-local DBSConfig = require(Dependencies.Configuration) --Dependencies/Configuration
+local function constructStat(Tag : string, CostTag : string, RetuTag : string, Boosts : {}, Attributes : baseAttributes)
+	for _, Active : BasePart in pairs(CollectionService:GetTagged(Tag)) do
+		local C : Configuration = Active:WaitForChild("Configuration")
+		local B : BillboardGui = Active:WaitForChild("BillboardGui")
 
---DataStore and helper fucntions
+		--Billboard Configuration
 
-local DBSData = DataStoreService:GetDataStore("DBSData")
+		local Co : string = KH:CorrectNan(aN.toSuffix(aN.fromString(C.Cost.Value)))
+		local Re : string = KH:CorrectNan(aN.toSuffix(aN.fromString(C.Return.Value)))
 
-game:BindToClose(function()
-	for _,Player in pairs(game.Players:GetPlayers()) do
-		DBSHelper["SaveData"..DBSConfig.PlayerFormat](Player)
-	end		
-end)
+		local CostTagSub = string.gsub(Attributes.BillboardFormat, "CostTag", CostTag)
+
+		local RetuTagSub = string.gsub(CostTagSub, "RetuTag", RetuTag)
+		local CostSub = string.gsub(RetuTagSub, "Cost", Co)
+		local Final = string.gsub(CostSub, "Return", Re)
+
+		B.Exchange.Text = Final
+
+		Active.Touched:Connect(function(hit)
+
+			if hit.Parent:FindFirstChild("Humanoid") then
+
+				local Player = game.Players:GetPlayerFromCharacter(hit.Parent)
+				local PlayerStats = Player:WaitForChild("KitStats")
+
+				--'p' player
+				local pCTag = aN.fromStringBaseAlya(PlayerStats[CostTag].Value)
+				local pRTag = aN.fromStringBaseAlya(PlayerStats[RetuTag].Value)
 
 
---PlayerRemoving and PlayerAdded
+				print(pCTag)
+				print(pRTag)
+				if aN.moreEquals(pCTag, aN.fromString(C.Cost.Value)) then
 
-game.Players.PlayerAdded:Connect(function(Player : Player)
+					local addValue = aN.fromString(C.Return.Value)
 
-	local PlayerCharacter = Player.Character or Player.CharacterAdded:Wait()
 
-	local StatGui = ReplicatedStorage.StatGUI:Clone()
-	StatGui.Parent = PlayerCharacter:WaitForChild("Head")
+					for boost, value in pairs(Boosts) do
+						local KitStatValue = aN.fromStringBaseAlya(PlayerStats[boost].Value)
+						local init = aN.mul(aN.fromString(value), KitStatValue)
+						init = aN.add(init, aN.fromString("1e0"))
 
-	local KitStats = ReplicatedStorage.KitStats:Clone()
-	KitStats.Parent = Player
 
-	local RSkill = aN.fromString("0e0")
-	local leaderstats = Instance.new("Folder")
-	leaderstats.Parent = Player
+						addValue = aN.mul(init, addValue)
+					end
 
-	local LSkill = Instance.new("StringValue")
-	LSkill.Parent = leaderstats
+					--add stat
+					PlayerStats[RetuTag].Value = aN.toStringBaseAlya(aN.add(addValue, aN.fromStringBaseAlya(PlayerStats[RetuTag].Value)))
 
-	local Data : string = ""
+					if Attributes.SubFromCStat then
+						PlayerStats[CostTag].Value = aN.toStringBaseAlya(aN.sub(aN.fromStringBaseAlya(PlayerStats[CostTag].Value), aN.fromString(C.Cost.Value)))		
+					end
 
-	local Success, ErrorMessage = pcall(function()
-		Data = DBSData:GetAsync(Player.UserId)
-	end)
 
-	if Success and Data then
-		DBSHelper["LoadData"..DBSConfig.PlayerFormat]()
-	else
-		print("No data found for userId and userName: "..Player.UserId.." "..Player.Name)
-		print(ErrorMessage)
+					print(Attributes.Reset)
+					for _,Stat in pairs(Attributes.Reset) do
+						if Stat == "Multi" then PlayerStats["Multi"].Value = aN.toStringBaseAlya(aN.fromString("1e0")) continue end
+						PlayerStats[Stat].Value = aN.toStringBaseAlya(aN.fromString("0e0"))
+					end
+
+				end
+
+			end
+		end)
 	end
+end
 
-	--main loop
-	while task.wait(DBSConfig.MainIncrLoopTickRate) do
-		local RSkill = aN.mul(aN.fromString("2e0"), 
-			aN.log10(aN.fromStringBaseAlya(KitStats.Money.Value)))
-		LSkill.Value = aN.toSuffix(RSkill)
+-- v0.1
 
-		KitStats.Money.Value = aN.toStringBaseAlya(aN.add(aN.fromStringBaseAlya(KitStats.Money.Value), aN.fromStringBaseAlya(KitStats.Multi.Value)))
-	end
+--[[
 
-end)
+orb hierarchy and expected children
 
-game.Players.PlayerRemoving:Connect(function(Player)
-	DBSHelper["SaveData"..DBSConfig.PlayerFormat]()
-end)
+Orb 
+--BillboardGui
+--Configuration
+--[--Cost
+--[--Return
+
+
+not req children (kit hypothetical)
+--BoostOnly
+--[--KitStat and TagHandler oriented name ... etc
+
+
+buttonRender() para
+
+Tag: orb name
+Boosts: boosts please use TagName accordingly with KitStats v;"[STAT]":EN
+
+
+]]
+
+local RegTable = {
+	Tag = "Buttons",
+	Boosts = {
+		["Rebirth"] = "1e0"
+	},
+	CostTag = "Money",
+	RetuTag = "Multi",
+	Attributes = {
+		Reset = {},
+		SubFromCTag = true,
+		BillboardFormat = "$Cost = xReturn"
+	}
+}
+
+--warning(argument #1 expects a string, but table was passed)
+--constructStat{Tag=RegTable.Tag, CostTag=RegTable.CostTag, RetuTag=RegTable.RetuTag, Boosts=RegTable.Boosts, Attributes=RegTable.Attributes}
+constructStat(RegTable.Tag, RegTable.CostTag, RegTable.RetuTag, RegTable.Boosts, RegTable.Attributes)
+
+local RebirthTable = {
+	Tag = "Rebirth",
+	Boosts = {
+		["UltraRebirth"] = "3e0"
+	},
+	CostTag = "Multi",
+	RetuTag = "Rebirth",
+	Attributes = {
+		Reset = {"Money","Multi"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+constructStat(RebirthTable.Tag, RebirthTable.CostTag, RebirthTable.RetuTag, RebirthTable.Boosts, RebirthTable.Attributes)
+
+local UltraRebirthTable = {
+	Tag = "UltraRebirth",
+	Boosts = {
+		["Prestige"] = "2e0"
+	},
+	CostTag = "Rebirth",
+	RetuTag = "UltraRebirth",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+constructStat(UltraRebirthTable.Tag, UltraRebirthTable.CostTag, UltraRebirthTable.RetuTag, UltraRebirthTable.Boosts, UltraRebirthTable.Attributes)
+

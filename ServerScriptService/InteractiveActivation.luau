@@ -2,12 +2,15 @@ local CollectionService = game:GetService("CollectionService")
 local RS = game.ReplicatedStorage
 local aN = require(RS.Dependencies.NumberSystems.AlyaNum)
 local KH = require(RS.Dependencies.KitHelper)
+local DC = require(RS.Dependencies.Configuration)
+
 
 type baseAttributes = {
 	Reset : {},
 	SubFromCStat: boolean,
 	BillboardFormat: string | "Cost CostTag = Return RetuTag"
 }
+
 
 local function constructStat(Tag : string, CostTag : string, RetuTag : string, Boosts : {}, Attributes : baseAttributes)
 	for _, Active : BasePart in pairs(CollectionService:GetTagged(Tag)) do
@@ -18,7 +21,7 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 
 		local Co : string = KH:CorrectNan(aN.toSuffix(aN.fromString(C.Cost.Value)))
 		local Re : string = KH:CorrectNan(aN.toSuffix(aN.fromString(C.Return.Value)))
-
+		
 		local CostTagSub = string.gsub(Attributes.BillboardFormat, "CostTag", CostTag)
 
 		local RetuTagSub = string.gsub(CostTagSub, "RetuTag", RetuTag)
@@ -38,13 +41,9 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 				local pCTag = aN.fromStringBaseAlya(PlayerStats[CostTag].Value)
 				local pRTag = aN.fromStringBaseAlya(PlayerStats[RetuTag].Value)
 
-
-				print(pCTag)
-				print(pRTag)
 				if aN.moreEquals(pCTag, aN.fromString(C.Cost.Value)) then
 
 					local addValue = aN.fromString(C.Return.Value)
-
 
 					for boost, value in pairs(Boosts) do
 						local KitStatValue = aN.fromStringBaseAlya(PlayerStats[boost].Value)
@@ -63,7 +62,6 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 					end
 
 
-					print(Attributes.Reset)
 					for _,Stat in pairs(Attributes.Reset) do
 						if Stat == "Multi" then PlayerStats["Multi"].Value = aN.toStringBaseAlya(aN.fromString("1e0")) continue end
 						PlayerStats[Stat].Value = aN.toStringBaseAlya(aN.fromString("0e0"))
@@ -76,7 +74,21 @@ local function constructStat(Tag : string, CostTag : string, RetuTag : string, B
 	end
 end
 
--- v0.1
+local function StatMaker(t : {})
+
+	print("Successfully made stat "..t.Tag)
+
+	constructStat(t.Tag or t[1], t.CostTag or t[2], t.RetuTag or t[3], t.Boosts or t[4], t.Attributes or t[5])
+	
+	return
+end
+
+local constStat = StatMaker
+local constrStat = StatMaker
+local structStat = StatMaker
+
+
+-- v1.1.0 helloboy930 GPL license
 
 --[[
 
@@ -105,7 +117,7 @@ Boosts: boosts please use TagName accordingly with KitStats v;"[STAT]":EN
 local RegTable = {
 	Tag = "Buttons",
 	Boosts = {
-		["Rebirth"] = "1e0"
+		["Rebirth"] = "1e0" -- placeholder boosts, you can change these
 	},
 	CostTag = "Money",
 	RetuTag = "Multi",
@@ -118,7 +130,7 @@ local RegTable = {
 
 --warning(argument #1 expects a string, but table was passed)
 --constructStat{Tag=RegTable.Tag, CostTag=RegTable.CostTag, RetuTag=RegTable.RetuTag, Boosts=RegTable.Boosts, Attributes=RegTable.Attributes}
-constructStat(RegTable.Tag, RegTable.CostTag, RegTable.RetuTag, RegTable.Boosts, RegTable.Attributes)
+StatMaker(RegTable)
 
 local RebirthTable = {
 	Tag = "Rebirth",
@@ -134,7 +146,7 @@ local RebirthTable = {
 	}
 }
 
-constructStat(RebirthTable.Tag, RebirthTable.CostTag, RebirthTable.RetuTag, RebirthTable.Boosts, RebirthTable.Attributes)
+StatMaker(RebirthTable)
 
 local UltraRebirthTable = {
 	Tag = "UltraRebirth",
@@ -150,5 +162,135 @@ local UltraRebirthTable = {
 	}
 }
 
-constructStat(UltraRebirthTable.Tag, UltraRebirthTable.CostTag, UltraRebirthTable.RetuTag, UltraRebirthTable.Boosts, UltraRebirthTable.Attributes)
+StatMaker(UltraRebirthTable)
 
+-- if you need help on anythin just ask me k?
+--yeah just like that  you get it right
+local PrestigeTable = {
+	Tag = "Prestige",
+	Boosts = {
+		["UltraPrestige"] = "2e0"
+	},
+	CostTag = "UltraRebirth",
+	RetuTag = "Prestige",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(PrestigeTable)
+
+local UltraPrestigeTable = {
+	Tag = "UltraPrestige",
+	Boosts = {
+		["MegaMultiplier"] = "2e0"
+	},
+	CostTag = "Prestige",
+	RetuTag = "UltraPrestige",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(UltraPrestigeTable) 
+
+local MegaMultiplierTable = {
+	Tag = "MegaMultiplier",
+	Boosts = {
+		["Ascension"] = "2e0"
+	},
+	CostTag = "UltraPrestige",
+	RetuTag = "MegaMultiplier",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(MegaMultiplierTable)
+
+local AscensionTable = {
+	Tag = "Ascension",
+	Boosts = {
+		["Power"] = "2e0"
+	},
+	CostTag = "MegaMultiplier",
+	RetuTag = "Ascension",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige","MegaMultiplier"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(AscensionTable)
+
+local PowerTable = {
+	Tag = "Power",
+	Boosts = {
+		["Infinity"] = "2e0"
+	},
+	CostTag = "Ascension",
+	RetuTag = "Power",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige","MegaMultiplier","Ascension"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+-- did you kknow this whole entire dbs runs on 2 scripts, thats how minimal this is
+
+StatMaker(PowerTable)
+
+local InfinityTable = {
+	Tag = "Infinity",
+	Boosts = {
+		["OmegaRebirth"] = "2e0"
+	},
+	CostTag = "Power",
+	RetuTag = "Infinity",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige","MegaMultiplier","Ascension","Power"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(InfinityTable)
+
+local OmegaRebirthTable = {
+	Tag = "OmegaRebirth",
+	Boosts = {
+		["OmegaPrestige"] = "2e0"
+	},
+	CostTag = "Infinity",
+	RetuTag = "OmegaRebirth",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige","MegaMultiplier","Ascension","Power","Infinity"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(OmegaRebirthTable)
+
+local OmegaPrestigeTable = {
+	Tag = "OmegaPrestige",
+	Boosts = {
+		["Eternity"] = "2e0"
+	},
+	CostTag = "OmegaRebirth",
+	RetuTag = "OmegaPrestige",
+	Attributes = {
+		Reset = {"Money","Multi","Rebirth","UltraRebirth","Prestige","UltraPrestige","MegaMultiplier","Ascension","Power","Infinity","OmegaRebirth"},
+		SubFromCTag = false,
+		BillboardFormat = "Cost CostTag = Return RetuTag"
+	}
+}
+
+StatMaker(OmegaPrestigeTable)

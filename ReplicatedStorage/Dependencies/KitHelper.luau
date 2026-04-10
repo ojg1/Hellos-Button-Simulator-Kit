@@ -9,16 +9,17 @@ local DBSData = DSS:GetDataStore("DBSData")
 function Helper:SaveDataLibrary(Player : Player)
 	local DataString = ""
 	local PlayerKitStats = Player:WaitForChild("KitStats")
-	
+
 	for _,Stat in pairs(PlayerKitStats:GetChildren()) do
 		DataString = DataString..Stat.Name..":"..tostring(aN.lbencode(aN.fromString(Stat.Value))).."|"
 	end
-	
+
 	local Success, ErrorMessage = pcall(function()
 		DBSData:SetAsync(Player.UserId, DataString)
 	end)
-	
+
 	if Success then
+		print("saved")
 		return 
 	else
 		print("Failed to save data for userId:"..tostring(Player.UserId).."| userName:"..Player.Name)
@@ -26,19 +27,22 @@ function Helper:SaveDataLibrary(Player : Player)
 	end
 end
 
-function Helper:SaveDataBaseAlya(Player : Player)
+function Helper:SaveDataBaseAlya(Player)
+	print(Player)
 	local DataString = ""
 	local PlayerKitStats = Player:WaitForChild("KitStats")
-	
+
 	for _,Stat in pairs(PlayerKitStats:GetChildren()) do
-		DataString = DataString..Stat.Name..":"..Stat.."|"
+		DataString = DataString..Stat.Name..":"..Stat.Value.."|"
 	end
-	
+
 	local Success, ErrorMessage = pcall(function()
 		DBSData:SetAsync(Player.UserId, DataString)
 	end)
-	
+
 	if Success then
+		print("saved")
+
 		return 
 	else
 		print("Failed to save data for userId:"..tostring(Player.UserId).."| userName:"..Player.Name)
@@ -56,11 +60,11 @@ function Helper:LoadDataBaseAlya(Player : Player, DataString : string)
 	for _, LBValue in pairs(StatList) do
 		local Divide = string.split(LBValue, ":")
 		local StatChild = KitStats:FindFirstChild(Divide[1])
-			
+
 		if StatChild then
 			StatChild.Value = Divide[2]
 		end
-			
+
 	end
 
 end
@@ -70,16 +74,18 @@ end
 function Helper:SaveDataString(Player : Player)
 	local DataString = ""
 	local PlayerKitStats = Player:WaitForChild("KitStats")
-	
+
 	for _,Stat in pairs(PlayerKitStats:GetChildren()) do
 		DataString = DataString..Stat.Name..":"..Stat.Value.."|"
 	end
-	
+
 	local Success, ErrorMessage = pcall(function()
 		DBSData:SetAsync(Player.UserId, DataString)
 	end)
 
 	if Success then
+		print("saved")
+
 		return
 	else
 		print("Failed to save data for userId:"..tostring(Player.UserId).."| userName:"..Player.Name)
@@ -97,18 +103,18 @@ function Helper:LoadDataLibrary(Player : Player, DataString : string)
 	for _, LBValue in pairs(StatList) do
 		local Divide = string.split(LBValue, ":")
 		local StatChild = KitStats:FindFirstChild(Divide[1])
-			
+
 		if StatChild then
 			StatChild.Value = aN.toString(aN.lbencode(tonumber(Divide[2])))
 		end
-			
+
 	end
 
 end
 
 --loaddata with string as is
 function Helper:LoadDataString(Player : Player, DataString : string)
-	
+
 	--redefine KitStats
 	local KitStats = Player:WaitForChild("KitStats")
 	local StatList = string.split(DataString, "|")
@@ -116,7 +122,7 @@ function Helper:LoadDataString(Player : Player, DataString : string)
 	for _, LBValue in pairs(StatList) do
 		local Divide = string.split(LBValue, ":")
 		local StatChild = KitStats:FindFirstChild(Divide[1])
-			
+
 		if StatChild then
 			StatChild.Value = Divide[2]
 		end
@@ -126,11 +132,11 @@ end
 
 --nan Correct: default
 function Helper:CorrectNan(s : string)
-    if s == "nan" then
-        return "0"
-    else
-        return s
-    end
+	if s == "nan" then
+		return "0"
+	else
+		return s
+	end
 end
 
 return Helper

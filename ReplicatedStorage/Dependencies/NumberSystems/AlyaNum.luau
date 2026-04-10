@@ -13,8 +13,8 @@ local HUGE = math.huge
 local suffixes = {
 	beginning = { "K", "M", "B" },
 	first = { "U", "D", "T", "Qd", "Qn", "Sx", "Sp", "Oc", "No" },
-	second = { "De", "Vt", "Tg", "Qdg", "Qng", "Sxg", "Spg", "Ocg", "Nog" },
-	third = { "Ce", "Dce", "Tce", "Qdce", "Qnce", "Sxce", "Spce", "Occe", "Noce" },
+	second = { "De", "Vt", "Tg", "qg", "Qg", "sg", "Sg", "Og", "Ng" },
+	third = { "Ce", "DCe", "TCe", "QdCe", "QnCe", "SxCe", "SpCe", "OcCe", "NoCe" },
 	mult = {
 		"Mi","Mc","Na","Pi","Fm","At","Zp","Yc", "Xo", "Ve", "Me", 
 		"Due", "Tre", "Te", "Pt", "He", "Hp", "Oct", "En", "Ic", "Mei", 

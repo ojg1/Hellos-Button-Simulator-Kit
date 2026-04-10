@@ -2,7 +2,7 @@
 local DBSConfig = {}
 local alyaNum = require(game.ReplicatedStorage.Dependencies.NumberSystems.AlyaNum)
 
-DBSConfig.MainIncrLoopTickRate = 0.25 --how long it will take for main currency to += secondary currency
+DBSConfig.MainIncrLoopTickRate = 0.05 --how long it will take for main currency to += secondary currency
 
 --your options "BaseAlya", "String", "Library"
 DBSConfig.PlayerFormat = "BaseAlya" --this will also be for save, so PLEASE consider your option. once you pick you can not pick again

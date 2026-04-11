@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <base href="index.html">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <div id="container">
+            <div class="bubbleBox" id="sidebar">
+                <a href="index.html">
+                    <button class="linkButton">Main Page</button> 
+                </a>
+                <a href="install.html">
+                    <button class="linkButton">Installation</button> 
+                </a>
+                <a href="StatGui.html">
+                    <button class="linkButton">Player Interface</button> 
+                </a>
+            </div>
+
+            <div class="bubbleBox" id="mainbar">
+                
+                <h1>Player Interface/GUI</h1>
+                <p>Players always need to see what amount of something they have to progress in a game. 
+                    In this instance, there will be an overhead interface that lets players see how much stats they own.
+                    To configure this, read the sections below.
+                </p>
+
+                <p>After you finish setting up the kit, in ReplicatedStorage, there will be a 'BillboardGui' object named StatGui. This is the player overhead interface.</p>
+
+                <h2>Format</h2>
+
+                <p>The StatGui has a special format. The GUI is split into 3 columns, called Docks. Within these docks, it is split into 10 rows, each that can store a TextLabel.
+                    In order for the TextLabel's text to write the stat and it's amount, the attribute called "GUIName" in the same stat in the KitStats folder (ReplicatedStorage/KitStats) can be changed to your liking.
+                </p>
+
+                <img src="images/format.png" width="400">
+
+                <p>For example, if you changed the GUIName of the stat, "Money", the interface will show "[GUIName]:x"</p>
+
+
+                <h2>Placement</h2>
+
+                <p></p>
+
+                <img src=images/ATTRIBUTTEE.png width="270">
+
+            </div>
+
+        </div>
+      
+
+    </body>
+
+</html>

@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <base href="index.html">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <div id="container">
+            <div class="bubbleBox" id="sidebar">
+                <a href="index.html">
+                    <button class="linkButton">Main Page</button> 
+                </a>
+                <a href="install.html">
+                    <button class="linkButton">Installation</button> 
+                </a>
+                <a href="StatGui.html">
+                    <button class="linkButton">Player Interface</button> 
+                </a>
+                <a href="MakeStat.html">
+                    <button class="linkButton">Making A Stat</button>
+                </a>
+            </div>
+
+            <div class="bubbleBox" id="mainbar">
+                <h1>Making A Stat</h1>
+
+                <h2>Introduction</h2>
+                <p>One of the worst things about a button simulator kit is to make a stat. Oftentimes it takes many minutes just to even figure out how the kit even works. In HBS Kit, making stats is a piece of cake.</p>
+                <p>Stats, their orbs, and other attributes all rely on one script, InteractiveAlya.luau (2 if you count GUI). Within this script, the main functionality only consists of 75 lines, which is miniscule compared to other Button Simulators's orb functionality.</p>
+
+                <p>We are still working on how to make stats even easier to make, so if it's confusing, just bear with us.</p>
+                
+                <p><strong>Step 1</strong>: Open up the script and scroll all the way down. </p>
+                <p><strong>Step 2</strong>: Copy the following code into the last empty line: </p>
+
+                <pre>
+                    <code>
+    <span class="g4">local</span> TestStatTable = <span class="g3">{</span>
+        Tag = <span class="g1">"TestStat"</span>,
+        Boosts = <span class="g3">{</span>
+            [<span class="g2">"TestStat"</span>] = <span class="g2">"1000001e-5"</span>
+        <span class="g3">}</span>,
+        CostTag = <span class="g2">"Money"</span>,
+        RetuTag = <span class="g2">"TestStat"</span>,
+        Attributes = <span class="g3">{</span>
+            Reset = <span class="g3">{}</span>,
+            SubFromCTag = <span class="g2"><strong>false</strong></span>,
+            BillboardFormat = <span class="g2">"Cost CostTag = Return RetuTag"</span>
+        <span class="g3">}</span>
+    <span class="g3">}</span>
+                    </code>
+                </pre>
+
+            </div>
+
+        </div>
+      
+
+    </body>
+
+</html>
